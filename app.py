@@ -75,19 +75,15 @@ print("Result:", result)
 text = None
 print(len(text))
 
-@app.route('/search', methods=['GET'])
-def search():
-    user_input = request.args.get('query')
+@app.route('/deserialize', methods=['POST'])
+def deserialize():
+    serialized_data = request.form.get('data')
     
-    # Intentional vulnerability: Concatenating user input directly into SQL query
-    query = f"SELECT * FROM users WHERE username = '{user_input}'"
+    # Intentional vulnerability: Unsafe deserialization of user input
+    user_data = pickle.loads(serialized_data)
     
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-    cursor.execute(query)
-    result = cursor.fetchall()
+    return f"Deserialized data: {user_data}"
     
-    return str(result)
 # Run the application if executed directly
 if __name__ == '__main__':
     app.run(debug=True)
