@@ -75,15 +75,19 @@ print("Result:", result)
 text = None
 print(len(text))
 
-@app.route('/execute', methods=['POST'])
-def execute():
-    command = request.form.get('command')
+@app.route('/search', methods=['GET'])
+def search():
+    user_input = request.args.get('query')
     
-    # Intentional vulnerability: Executing user input as a command
-    result = subprocess.check_output(command, shell=True)
+    # Intentional vulnerability: Concatenating user input directly into SQL query
+    query = f"SELECT * FROM users WHERE username = '{user_input}'"
     
-    return f"Result: {result}"
-
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+    
+    return str(result)
 # Run the application if executed directly
 if __name__ == '__main__':
     app.run(debug=True)
