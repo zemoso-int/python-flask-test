@@ -54,5 +54,18 @@ class FlaskAppTests(unittest.TestCase):
         response = self.app.delete('/tasks/100')
         self.assertEqual(response.status_code, 404)
 
+    # New Test Cases for Introduced Bugs
+    def test_bug_index_out_of_range(self):
+        response = self.app.get('/index-out-of-range')
+        self.assertEqual(response.status_code, 500)  # Expecting an Internal Server Error
+
+    def test_bug_division_by_zero(self):
+        response = self.app.get('/division-by-zero')
+        self.assertEqual(response.status_code, 500)  # Expecting an Internal Server Error
+
+    def test_bug_null_pointer_exception(self):
+        response = self.app.get('/null-pointer-exception')
+        self.assertEqual(response.status_code, 500)  # Expecting an Internal Server Error
+
 if __name__ == '__main__':
     unittest.main()

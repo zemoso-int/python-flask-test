@@ -59,6 +59,22 @@ def delete_task(task_id):
     tasks = [task for task in tasks if task['id'] != task_id]
     return jsonify({'result': True})
 
+# Introduced Bugs
+# Bug 1: Index out of range
+numbers = [1, 2, 3, 4, 5]
+for i in range(len(numbers) + 1):
+    print(numbers[i])
+
+# Bug 2: Division by zero
+numerator = 10
+denominator = 0
+result = numerator / denominator
+print("Result:", result)
+
+# Bug 3: NullPointerExcpetion equivalent (TypeError)
+text = None
+print(len(text))
+
 # Run the application if executed directly
 if __name__ == '__main__':
     app.run(debug=True)
