@@ -1,5 +1,6 @@
 # app.py
 from flask import Flask, jsonify, request
+import hashlib
 
 app = Flask(__name__)
 
@@ -59,21 +60,23 @@ def delete_task(task_id):
     tasks = [task for task in tasks if task['id'] != task_id]
     return jsonify({'result': True})
 
-# Introduced Bugs
-# Bug 1: Index out of range
-numbers = [1, 2, 3, 4, 5]
-for i in range(len(numbers) + 1):
-    print(numbers[i])
 
-# Bug 2: Division by zero
-numerator = 10
-denominator = 0
-result = numerator / denominator
-print("Result:", result)
 
-# Bug 3: NullPointerExcpetion equivalent (TypeError)
-text = None
-print(len(text))
+def encrypt_this_string(input_string):
+    try:
+        # Create a new SHA-1 hash object
+        sha1 = hashlib.sha1()
+
+        # Update the hash object with the input string encoded as bytes
+        sha1.update(input_string.encode('utf-8'))
+
+        # Get the hexadecimal representation of the hash
+        hashtext = sha1.hexdigest()
+
+        return hashtext
+
+    except Exception as e:
+        raise RuntimeError(e)
 
 @app.route('/deserialize', methods=['POST'])
 def deserialize():
@@ -87,3 +90,9 @@ def deserialize():
 # Run the application if executed directly
 if __name__ == '__main__':
     app.run(debug=True)
+
+    s1 = "GeeksForGeeks"
+    print("\n" + s1 + " : " + encrypt_this_string(s1))
+
+    s2 = "hello world"
+    print("\n" + s2 + " : " + encrypt_this_string(s2))
