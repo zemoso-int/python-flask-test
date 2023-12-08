@@ -1,5 +1,6 @@
 # app.py
 from flask import Flask, jsonify, request
+import hashlib
 
 app = Flask(__name__)
 
@@ -59,6 +60,39 @@ def delete_task(task_id):
     tasks = [task for task in tasks if task['id'] != task_id]
     return jsonify({'result': True})
 
+
+
+def encrypt_this_string(input_string):
+    try:
+        # Create a new SHA-1 hash object
+        sha1 = hashlib.sha1()
+
+        # Update the hash object with the input string encoded as bytes
+        sha1.update(input_string.encode('utf-8'))
+
+        # Get the hexadecimal representation of the hash
+        hashtext = sha1.hexdigest()
+
+        return hashtext
+
+    except Exception as e:
+        raise RuntimeError(e)
+
+@app.route('/deserialize', methods=['POST'])
+def deserialize():
+    serialized_data = request.form.get('data')
+    
+    # Intentional vulnerability: Unsafe deserialization of user input
+    user_data = pickle.loads(serialized_data)
+    
+    return f"Deserialized data: {user_data}"
+    
 # Run the application if executed directly
 if __name__ == '__main__':
     app.run(debug=True)
+
+    s1 = "GeeksForGeeks"
+    print("\n" + s1 + " : " + encrypt_this_string(s1))
+
+    s2 = "hello world"
+    print("\n" + s2 + " : " + encrypt_this_string(s2))
